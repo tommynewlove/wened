@@ -2,6 +2,9 @@
 
 const btnSpin = document.querySelector('.spin');
 let midSpin = false;
+let revealImage1 = '';
+let revealImage2 = '';
+let revealImage3 = '';
 
 // elements
 const reels = document.querySelectorAll('.reel');
@@ -21,21 +24,13 @@ const flash2 = document.querySelector('.flash2');
 const flash3 = document.querySelector('.flash3');
 
 const audioReset = new Audio('enjoy_yourselves.wav');
-
-// const reelSpin1 = function(){
-//     images.forEach(function(el) {
-//         el.classList.add('hidden')
-
-//     })
-//     const revealImage1 = Math.trunc(Math.random() * 3) + 1
-//     document.getElementById(`reel--1--img--${revealImage1}`).classList.remove('hidden')
-//     const revealImage2 = Math.trunc(Math.random() * 3) + 1
-//     document.getElementById(`reel--2--img--${revealImage2}`).classList.remove('hidden')
-//     const revealImage3 = Math.trunc(Math.random() * 3) + 1
-//     document.getElementById(`reel--3--img--${revealImage3}`).classList.remove('hidden')
-// };
+const audioSpin = new Audio('spin.wav');
+const audioJuicy = new Audio('juicyspud.wav');
+const audioBiscuit = new Audio('biscuit.wav');
 
 // Functions
+
+audioReset.onload = audioReset.play();
 
 const init = function () {
   spinsRemain.textContent = 10;
@@ -61,7 +56,7 @@ const init = function () {
   playerScore.style.backgroundColor = '#222';
   resetBtn.classList.add('hidden');
 
-  audioReset.play();
+  //   audioReset.play();
 };
 
 const reelSpin1 = function () {
@@ -69,6 +64,7 @@ const reelSpin1 = function () {
     el.classList.add('hidden');
     el.classList.remove('win1');
   });
+
   const revealImage1 = Math.trunc(Math.random() * 3) + 1;
   const image = document.getElementById(`reel--1--img--${revealImage1}`);
   image.classList.remove('hidden');
@@ -110,6 +106,8 @@ const winner = function () {
   //   console.log(winner1, winner2, winner3);
 
   if (winner1 === winner2 && winner1 === winner3) {
+    // play audio
+    audioJuicy.play();
     // increase score
     playerScore.textContent = Number(curScore) + 10;
     // flash
@@ -119,6 +117,8 @@ const winner = function () {
       midSpin = false;
     }, 3000);
   } else if (winner1 === winner2) {
+    // play audio
+    audioBiscuit.play();
     // increase score
     playerScore.textContent = Number(curScore) + 3;
     // flash
@@ -197,6 +197,8 @@ const spin = function () {
     return;
   }
 
+  audioSpin.play();
+
   spinsRemain.textContent = Number(curSpins) - 1;
 
   reels.forEach(function (reel) {
@@ -211,26 +213,6 @@ const spin = function () {
       reel.classList.remove('reel');
     }
   });
-
-  // Spin images
-
-  const revealImage1 = Math.trunc(Math.random() * 3) + 1;
-  document
-    .getElementById(`reel--1--img--${revealImage1}`)
-    .classList.remove('hidden');
-  const revealImage2 = Math.trunc(Math.random() * 3) + 1;
-  document
-    .getElementById(`reel--2--img--${revealImage2}`)
-    .classList.remove('hidden');
-  const revealImage3 = Math.trunc(Math.random() * 3) + 1;
-  document
-    .getElementById(`reel--3--img--${revealImage3}`)
-    .classList.remove('hidden');
-
-  // // Set Stop Time
-  // const stopTimer = Math.trunc(Math.random() * 2000) + 3001
-  // const spinner = setInterval(reelSpin1, 30);
-  // setTimeout(function() {clearInterval(spinner)} , stopTimer)
 
   // Set Stop Time
   const stopTimer1 = Math.trunc(Math.random() * 1000) + 1000;
