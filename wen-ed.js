@@ -57,7 +57,7 @@ const init = function () {
   audioReset.play();
 };
 
-init();
+// init();
 
 const reelSpin1 = function () {
   reel1.forEach(function (el) {
