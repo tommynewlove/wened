@@ -30,10 +30,6 @@ const audioBiscuit = new Audio('biscuit.wav');
 
 // Functions
 
-setTimeout(function () {
-  audioReset.play();
-}, 1000);
-
 const init = function () {
   spinsRemain.textContent = 10;
   playerScore.textContent = 0;
@@ -58,7 +54,7 @@ const init = function () {
   playerScore.style.backgroundColor = '#222';
   resetBtn.classList.add('hidden');
 
-  //   audioReset.play();
+  audioReset.play();
 };
 
 init();
