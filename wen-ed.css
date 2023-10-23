@@ -42,21 +42,30 @@ main {
 }
 
 .reel {
-  padding: 5%;
-  font-size: 10vb;
-  position: static;
+  display: grid;
+  height: 25vw;
+  width: 25vw;
+  max-width: 20rem;
+  max-height: 20rem;
   background-image: linear-gradient(to top left, #825236 0%, #f8bb11 100%);
-  align-items: center;
-  margin: 4%;
+  box-sizing: border-box;
+}
+
+.box {
+  /* font-size: 10vb; */
+  text-align: center;
+  font-size: 8cqh;
 }
 
 .reel--image {
-  /* padding: 5%; */
-  height: 20rem;
-  width: 20rem;
+  height: 25vw;
+  width: 25vw;
+  max-width: 20rem;
+  max-height: 20rem;
   position: static;
   align-items: center;
-  margin: 4%;
+  /* margin: 4%; */
+  box-sizing: border-box;
 }
 
 .reel--image img {
@@ -115,7 +124,7 @@ p {
   font-family: inherit;
   padding: 1rem 2rem;
   cursor: pointer;
-  margin: 2rem;
+  margin: 6rem;
 }
 
 .hidden {
