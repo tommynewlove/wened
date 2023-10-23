@@ -20,6 +20,8 @@ const flash1 = document.querySelector('.flash1');
 const flash2 = document.querySelector('.flash2');
 const flash3 = document.querySelector('.flash3');
 
+const audioReset = new Audio('enjoy_yourselves.wav');
+
 // const reelSpin1 = function(){
 //     images.forEach(function(el) {
 //         el.classList.add('hidden')
@@ -58,6 +60,8 @@ const init = function () {
   highScore.style.backgroundColor = '#222';
   playerScore.style.backgroundColor = '#222';
   resetBtn.classList.add('hidden');
+
+  audioReset.play();
 };
 
 const reelSpin1 = function () {
