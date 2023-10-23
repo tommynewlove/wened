@@ -30,7 +30,9 @@ const audioBiscuit = new Audio('biscuit.wav');
 
 // Functions
 
-audioReset.onload = audioReset.play();
+setTimeout(function () {
+  audioReset.play();
+}, 1000);
 
 const init = function () {
   spinsRemain.textContent = 10;
@@ -58,6 +60,8 @@ const init = function () {
 
   //   audioReset.play();
 };
+
+init();
 
 const reelSpin1 = function () {
   reel1.forEach(function (el) {
