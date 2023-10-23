@@ -29,18 +29,22 @@ header {
 }
 
 main {
-  text-align: center;
+  /* text-align: center; */
   position: static;
-  justify-content: space-between;
   color: #eee;
+  /* display: flex; */
+  /* align-items: center; */
+}
+
+.reels {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
 }
 
 .reel {
   padding: 5%;
-  display: flex;
-  font-size: 10em;
+  font-size: 10vb;
+  position: static;
   background-image: linear-gradient(to top left, #825236 0%, #f8bb11 100%);
   align-items: center;
   margin: 4%;
@@ -50,7 +54,7 @@ main {
   /* padding: 5%; */
   height: 20rem;
   width: 20rem;
-  display: flex;
+  position: static;
   align-items: center;
   margin: 4%;
 }
@@ -58,7 +62,7 @@ main {
 .reel--image img {
   height: 100%;
   width: 100%;
-  object-fit: cover;
+  object-fit: fill;
 }
 
 
