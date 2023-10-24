@@ -116,7 +116,7 @@ const winner = function () {
     setTimeout(function () {
       clearInterval(winFlash);
       midSpin = false;
-    }, 3000);
+    }, 3150);
   } else if (winner1 === winner2 || winner1 === winner3 || winner2 === winner3) {
     // play audio
     audioBiscuit.play();
@@ -127,7 +127,7 @@ const winner = function () {
     setTimeout(function () {
       clearInterval(winFlash);
       midSpin = false;
-    }, 1200);
+    }, 1350);
   } else {
     midSpin = false;
   }
