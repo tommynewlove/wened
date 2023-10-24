@@ -117,7 +117,7 @@ const winner = function () {
       clearInterval(winFlash);
       midSpin = false;
     }, 3000);
-  } else if (winner1 === winner2) {
+  } else if (winner1 === winner2 || winner1 === winner3 || winner2 === winner3) {
     // play audio
     audioBiscuit.play();
     // increase score
