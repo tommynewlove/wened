@@ -33,6 +33,7 @@ const audioBiscuit = new Audio('biscuit.wav');
 const init = function () {
   spinsRemain.textContent = 10;
   playerScore.textContent = 0;
+  midSpin = false;
 
   const reelsImages = document.querySelectorAll('.reel--image');
 
