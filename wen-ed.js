@@ -173,10 +173,7 @@ const endSpin = function () {
     // increase score
     playerScore.textContent = Number(curScore) + 10;
     // Set css border color
-    winArr.forEach(function (reel) {
-      document.getElementById(`reel--${reel}`).style.borderColor =
-        'greenyellow';
-    });
+    winningBorder(winArr)
     // Flash winning images
     winFlash(3150, winArr);
 
@@ -185,10 +182,7 @@ const endSpin = function () {
     winArr = [1, 2];
     audioBiscuit.play();
     playerScore.textContent = Number(curScore) + 3;
-    winArr.forEach(function (reel) {
-      document.getElementById(`reel--${reel}`).style.borderColor =
-        'greenyellow';
-    });
+    winningBorder(winArr)
     winFlash(1350, winArr);
 
     // No images match
@@ -235,5 +229,13 @@ const flash = function (reelArr) {
       image.classList.add('hidden');
       flash.classList.remove('hidden');
     }
+  });
+};
+
+
+// Set winning container border color
+const winningBorder = function (winArr) {
+  winArr.forEach(function (reel) {
+    document.getElementById(`reel--${reel}`).style.borderColor = 'greenyellow';
   });
 };
