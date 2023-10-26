@@ -66,7 +66,7 @@ const init = function () {
 
   // Reset border background colour
   reels.forEach(function (reel) {
-    reel.style.borderColor = 'orangered';
+    reel.style.borderColor = 'goldenrod';
   });
 
   // Reset background colours and hide the reset button
