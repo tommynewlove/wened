@@ -16,25 +16,13 @@ body {
   font-family: 'Bungee Spice', sans-serif;
   color: #eee;
   background-color: #222;
-  /* background-color: #60b347; */
   margin: 3rem;
 }
 
 /* LAYOUT */
-header {
-  font-size: 1rem;
-  text-align: center;
-  position: static;
-  width: 100%;
-  /* margin: 2rem; */
-}
-
 main {
-  /* text-align: center; */
   position: static;
   color: #eee;
-  /* display: flex; */
-  /* align-items: center; */
 }
 
 .reels {
@@ -49,7 +37,11 @@ main {
   max-width: 20rem;
   max-height: 20rem;
   background-image: linear-gradient(to top left, #825236 0%, #f8bb11 100%);
+  
   box-sizing: border-box;
+  border-style: solid;
+  border-width: .5rem;
+  border-color: goldenrod;
 }
 
 .box {
@@ -62,11 +54,14 @@ main {
 .reel--image {
   height: 25vw;
   width: 25vw;
+  border-style: solid;
+  border-width: .5rem;
+  border-color: goldenrod;
+  border-radius: 10px;
   max-width: 20rem;
   max-height: 20rem;
   position: static;
   align-items: center;
-  /* margin: 4%; */
   box-sizing: border-box;
 }
 
@@ -77,23 +72,14 @@ main {
 }
 
 #reel--1 {
-  /* width: 52rem; */
-  /* display: flex; */
-  /* flex-direction: column; */
   align-items: center;
 }
 
 #reel--2 {
-  /* width: 52rem; */
-  /* display: flex; */
-  /* flex-direction: column; */
   align-items: center;
 }
 
 #reel--3 {
-  /* width: 52rem; */
-  /* display: flex; */
-  /* flex-direction: column; */
   align-items: center;
 }
 
@@ -118,9 +104,6 @@ h3 {
 
 p {
   text-align: center;
-
-  /* position: center; */
-  /* width: 100%; */
 }
 
 .spin--container {
@@ -160,7 +143,6 @@ p {
   max-width: 20rem;
   font-size: 5cqw;
   align-self: flex-end;
-  /* box-sizing: border-box; */
 }
 
 .reset--container {
