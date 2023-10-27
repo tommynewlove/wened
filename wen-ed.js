@@ -198,21 +198,33 @@ const spin = function () {
   let spinTime = 0;
   // Spin reels
   const spin = function () {
-    for (let i = 1; i <= 3; i++) {
-      const stopTimer = Math.trunc(Math.random() * 1000) + 1000 * i;
+    // Create array of reels in play
+    let liveReels = [];
+    reels.forEach(function (el) {
+      if (!el.classList.contains('hold--reel'))
+        liveReels.push(Number(el.dataset.reelnum));
+    });
+    const totalLiveReels = liveReels.length;
+    /////////////////////////////
+
+    // Spin reels
+    // Stoptimer is reduced if some reels are held 
+    liveReels.forEach(function (reel, i) {
+      const stopTimer = Math.trunc(Math.random() * 1000) + 1000 * (i + 1);
       // if last spin, set the timer to run the endSpin function
-      if (i === 3) spinTime = stopTimer;
-      // Spin reels
-      const spinner = setInterval(reelSpin, 30, i);
+      if (i + 1 === totalLiveReels) spinTime = stopTimer;
+      const spinner = setInterval(reelSpin, 30, reel);
       setTimeout(function () {
         clearInterval(spinner);
 
-        const el = document.getElementById(`reel--${i}`);
+        const el = document.getElementById(`reel--${i+1}`);
         if (!el.classList.contains('hold--reel')) {
           el.style.borderColor = 'orangered';
         }
       }, stopTimer);
-    }
+    });
+
+
   };
   spin();
 
@@ -333,8 +345,8 @@ const winningBorder = function (winArr) {
 const flashReels = function () {
   reels.forEach(function (reel) {
     const borderColor = reel.style.borderColor;
-    if (borderColor === 'goldenrod') reel.style.borderColor = 'white'
-    else reel.style.borderColor = 'goldenrod'
+    if (borderColor === 'goldenrod') reel.style.borderColor = 'white';
+    else reel.style.borderColor = 'goldenrod';
   });
 };
 
@@ -370,7 +382,6 @@ const holdFunc = function (reelNum) {
   const reel = document.querySelector(`.reel${reelNum}`);
   reel.style.borderColor = 'blue';
   reel.classList.add('hold--reel');
-
 
   if (reelNum === 1) clearInterval(flashHoldInterval1);
   if (reelNum === 2) clearInterval(flashHoldInterval2);
