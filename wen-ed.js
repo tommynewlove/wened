@@ -1,6 +1,24 @@
 'use strict';
 
+// variables
 let midSpin = false;
+const images = 4;
+// image code, prize, odds
+const prizes = [
+  [1, 50, 0.1],
+  [2, 40, 0.2],
+  [3, 30, 0.3],
+  [4, 20, 0.4],
+];
+
+const randomNumber = function (number) {
+  return Math.trunc(Math.random() * number + 1);
+};
+
+let hold = false;
+let flashHoldInterval;
+let flashSpinInterval;
+let flashResetInterval;
 
 // image HTML variables
 let img = '1';
@@ -11,7 +29,12 @@ let imgHTML = `<img src="wened${img}.jpg" alt="?" class="image image${imgClass}"
 
 // elements
 const btnSpin = document.querySelector('.spin');
-const resetBtn = document.querySelector('.reset--container');
+const resetContainer = document.querySelector('.reset--container');
+const resetBtn = document.querySelector('.reset--btn');
+const btnHold1 = document.getElementById('hold--1');
+const btnHold2 = document.getElementById('hold--2');
+const btnHold3 = document.getElementById('hold--3');
+const btnHoldAll = document.querySelectorAll('.hold');
 
 const reels = document.querySelectorAll('.reel');
 const box = document.querySelectorAll('.box');
@@ -33,6 +56,18 @@ btnSpin.addEventListener('click', function () {
 
 resetBtn.addEventListener('click', function () {
   init();
+});
+
+btnHold1.addEventListener('click', function (e) {
+  if (hold) holdFunc(1);
+});
+
+btnHold2.addEventListener('click', function () {
+  if (hold) holdFunc(2);
+});
+
+btnHold3.addEventListener('click', function () {
+  if (hold) holdFunc(3);
 });
 
 ///////////////////////////////////////////////////
@@ -72,10 +107,15 @@ const init = function () {
   // Reset background colours and hide the reset button
   highScore.style.backgroundColor = '#222';
   playerScore.style.backgroundColor = '#222';
-  resetBtn.classList.add('hidden');
+  resetContainer.classList.add('hidden');
 
   // Play reset sound
-  audioReset.play();
+  // audioReset.play();
+
+  // flash animations
+  flashHoldInterval = setInterval(flashHoldButtons, 150);
+  flashSpinInterval = setInterval(flashSpinButton, 150);
+  clearInterval(flashResetInterval);
 };
 
 // Generate Image HTML
@@ -87,16 +127,18 @@ const generateImgHTML = function (reel, imgNum) {
 // Swap the image in each reel
 const reelSpin = function (reelNum) {
   // Select random image
-  const randomImage = Math.trunc(Math.random() * 3) + 1;
+  const randomImage = Math.trunc(Math.random() * images) + 1;
   imgHTML = generateImgHTML(reelNum, randomImage);
 
-  // remove current image
-  const curImg = document.querySelector(`.image${reelNum}`);
-  if (curImg) curImg.remove();
-
-  // insert new Image
+  // if reel not on hold swap images
   const reel = document.querySelector(`.reel${reelNum}`);
-  reel.insertAdjacentHTML('beforeend', imgHTML);
+  if (!reel.classList.contains('hold--reel')) {
+    // remove current image
+    const curImg = document.querySelector(`.image${reelNum}`);
+    if (curImg) curImg.remove();
+    // insert new Image
+    reel.insertAdjacentHTML('beforeend', imgHTML);
+  }
 };
 
 // Spin through reels
@@ -110,8 +152,14 @@ const spin = function () {
     return;
   }
 
-  // set to spinning
   midSpin = true;
+
+  // Clear animations
+  clearInterval(flashHoldInterval);
+  clearInterval(flashSpinInterval);
+
+  // Reset button color
+  btnSpin.style.borderColor = 'red'
 
   // play spinning audio
   audioSpin.play();
@@ -129,11 +177,14 @@ const spin = function () {
 
       // Change class to image container
       reel.classList.add('reel--image');
-      reel.classList.remove('reel');
+      // reel.classList.remove('reel');
     }
     // reset reel container border colour
-    reel.style.borderColor = 'goldenrod';
+    if (!hold) reel.style.borderColor = 'goldenrod';
   });
+
+  // Reset hold buttons
+  ResetHoldButtons();
 
   let spinTime = 0;
   // Spin reels
@@ -146,7 +197,11 @@ const spin = function () {
       const spinner = setInterval(reelSpin, 30, i);
       setTimeout(function () {
         clearInterval(spinner);
-        document.getElementById(`reel--${i}`).style.borderColor = 'orangered';
+
+        const el = document.getElementById(`reel--${i}`);
+        if (!el.classList.contains('hold--reel')) {
+          el.style.borderColor = 'orangered';
+        }
       }, stopTimer);
     }
   };
@@ -162,7 +217,17 @@ const endSpin = function () {
   const win2 = document.querySelector('.image2').dataset.number;
   const win3 = document.querySelector('.image3').dataset.number;
   const curScore = playerScore.textContent;
+  const points = prizes
+    .filter(arr => arr[0] === Number(win1))
+    .map(arr => arr[1])
+    .reduce((acc, points) => points, 0);
+  console.log(points);
   let winArr = [];
+
+  // Clear all held images
+  reels.forEach(function (reel) {
+    reel.classList.remove('hold--reel');
+  });
 
   // All 3 images match
   if (win1 === win2 && win1 === win3) {
@@ -171,9 +236,9 @@ const endSpin = function () {
     // play audio
     audioJuicy.play();
     // increase score
-    playerScore.textContent = Number(curScore) + 10;
+    playerScore.textContent = Number(curScore) + points;
     // Set css border color
-    winningBorder(winArr)
+    winningBorder(winArr);
     // Flash winning images
     winFlash(3150, winArr);
 
@@ -181,8 +246,8 @@ const endSpin = function () {
   } else if (win1 === win2) {
     winArr = [1, 2];
     audioBiscuit.play();
-    playerScore.textContent = Number(curScore) + 3;
-    winningBorder(winArr)
+    playerScore.textContent = Number(curScore) + 10;
+    winningBorder(winArr);
     winFlash(1350, winArr);
 
     // No images match
@@ -191,7 +256,21 @@ const endSpin = function () {
       reel.style.borderColor = 'rgb(146, 41, 2, 0.959)';
     });
     midSpin = false;
+
+    // Hold function
+    const holdNumber = randomNumber(3);
+
+    if (spinsRemain.textContent !== '0') {
+      if (holdNumber === 1) {
+        hold = true;
+        // flash buttons
+        flashHoldInterval = setInterval(flashHoldButtons, 75);
+      }
+    }
   }
+
+  if (spinsRemain.textContent !== '0')
+   flashSpinInterval = setInterval(flashSpinButton, 150);
 
   // Update high score
   const curSpins = spinsRemain.textContent;
@@ -200,11 +279,12 @@ const endSpin = function () {
     const curHighScore = Number(highScore.textContent);
     if (curHighScore < finalScore) {
       highScore.textContent = finalScore;
-      highScore.style.backgroundColor = 'green';
+      highScore.style.color = 'greenyellow';
     }
 
-    playerScore.style.backgroundColor = 'green';
-    resetBtn.classList.remove('hidden');
+    playerScore.style.color = 'greenyellow';
+    resetContainer.classList.remove('hidden');
+    flashResetInterval = setInterval(flashResetButton, 150);
   }
 };
 
@@ -232,10 +312,44 @@ const flash = function (reelArr) {
   });
 };
 
-
 // Set winning container border color
 const winningBorder = function (winArr) {
   winArr.forEach(function (reel) {
     document.getElementById(`reel--${reel}`).style.borderColor = 'greenyellow';
   });
 };
+
+const flashHoldButtons = function () {
+  btnHoldAll.forEach(function (el) {
+    const borderColor = el.style.borderColor;
+    if (borderColor === 'blue') el.style.borderColor = 'white';
+    else el.style.borderColor = 'blue';
+  });
+};
+
+const flashSpinButton = function () {
+  if (btnSpin.style.borderColor === 'red') btnSpin.style.borderColor = 'white';
+  else btnSpin.style.borderColor = 'red';
+};
+
+const flashResetButton = function () {
+  if (resetBtn.style.borderColor === 'red')
+    resetBtn.style.borderColor = 'white';
+  else resetBtn.style.borderColor = 'red';
+};
+
+const ResetHoldButtons = function () {
+  btnHoldAll.forEach(function (el) {
+    clearInterval(flashHoldInterval);
+    el.style.borderColor = 'blue';
+    hold = false
+  });
+};
+
+const holdFunc = function (reelNum) {
+  const reel = document.querySelector(`.reel${reelNum}`);
+  reel.style.borderColor = 'blue';
+  reel.classList.add('hold--reel');
+};
+
+init();

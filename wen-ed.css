@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Bungee+Spice&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Bungee+Inline&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Bungee&display=swap');
 
 * {
   margin: 0;
@@ -14,15 +16,19 @@ html {
 
 body {
   font-family: 'Bungee Spice', sans-serif;
+  max-width: 400px;
   color: #eee;
   background-color: #222;
-  margin: 3rem;
+  margin: auto;
+  /* align-items: center; */
 }
 
 /* LAYOUT */
 main {
   position: static;
   color: #eee;
+  margin-left: 3rem;
+  margin-right: 3rem;
 }
 
 .reels {
@@ -34,8 +40,10 @@ main {
   display: grid;
   height: 25vw;
   width: 25vw;
-  max-width: 20rem;
-  max-height: 20rem;
+  max-height: 100px;
+  max-width: 100px;
+  /* max-width: 20rem; */
+  /* max-height: 20rem; */
   background-image: linear-gradient(to top left, #825236 0%, #f8bb11 100%);
   
   box-sizing: border-box;
@@ -54,12 +62,12 @@ main {
 .reel--image {
   height: 25vw;
   width: 25vw;
+  max-height: 100px;
+  max-width: 100px;
   border-style: solid;
   border-width: .5rem;
   border-color: goldenrod;
   border-radius: 10px;
-  max-width: 20rem;
-  max-height: 20rem;
   position: static;
   align-items: center;
   box-sizing: border-box;
@@ -83,7 +91,32 @@ main {
   align-items: center;
 }
 
-/* ELEMENTS STYLE */
+.hold--buttons--container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.hold {
+  width: 25vw;
+  height: 3rem;
+  max-width: 100px;
+  position: static;
+  align-items: center;
+
+  box-sizing: border-box;
+  border-style: inset;
+  border-width: 3px;
+  border-color: blue;
+  background-color: black;
+  color: #222;
+  font-size: 1.1rem;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 1.5rem;
+
+}
+
+
 h1 {
   font-size: 6rem;
   text-align: center;
@@ -123,27 +156,87 @@ p {
   margin: 3rem;
 }
 
-.scoreboard {
-  border-style: double;
-  border-color: orangered;
-  font-size: 2rem;
-  margin-top: 2rem;
+.middle--body {
+  display: flex;
+  margin-top: 1.5rem;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .game--stats--container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  width: 50%;
+  flex-grow: 1;
+  border-style: double;
+  border-color: orangered;
+  margin-left: .95rem;
+  /* margin-top: 1rem; */
 }
 
 .stats {
   display: grid;
   height: auto;
-  width: 25vw;
-  max-width: 20rem;
-  font-size: 5cqw;
+  /* width: 25vw; */
+  /* max-width: 20rem; */
+  font-size: 1.5rem;
   align-self: flex-end;
+  margin-top: 0.5rem;
 }
+
+.stat--num {
+  font-family: 'Bungee Inline', sans-serif;
+  padding: 0;
+  font-size: 2rem;
+ }
+
+.scoreboard--container {
+  width: 50%;
+  text-align: left;
+  border-style: double;
+  border-color: orangered;
+  font-size: 2rem;
+  margin-right: .95rem;
+  /* flex-grow: 1; */
+  /* margin-top: 2rem; */
+}
+
+.scoreboard--item {
+  display: flex;
+  /* flex-direction: row; */
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.scoreboard--images {
+  display: flex;
+  width: 50%;
+  /* height: 2.5rem; */
+  font-size: 2rem;
+  /* margin-top: 1rem;
+  margin-left: 1rem; */
+  box-sizing: border-box;
+}
+
+.scoreboard--images img {
+  height: 2.5rem;
+  object-fit: cover;
+}
+
+.scoreboard--prizes {
+  width: 50%;
+  font-size: 2rem;
+  /* margin-top: 1rem;
+  margin-left: 1rem; */
+}
+
+/* .scoreboard--prizes img {
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+} */
 
 .reset--container {
   text-align: center;
