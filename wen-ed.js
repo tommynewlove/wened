@@ -16,9 +16,12 @@ const randomNumber = function (number) {
 };
 
 let hold = false;
-let flashHoldInterval;
+let flashHoldInterval1;
+let flashHoldInterval2;
+let flashHoldInterval3;
 let flashSpinInterval;
 let flashResetInterval;
+let flashReelsInterval;
 
 // image HTML variables
 let img = '1';
@@ -105,16 +108,19 @@ const init = function () {
   });
 
   // Reset background colours and hide the reset button
-  highScore.style.backgroundColor = '#222';
-  playerScore.style.backgroundColor = '#222';
+  highScore.style.color = 'white';
+  playerScore.style.color = 'white';
   resetContainer.classList.add('hidden');
 
   // Play reset sound
   // audioReset.play();
 
   // flash animations
-  flashHoldInterval = setInterval(flashHoldButtons, 150);
+  flashHoldInterval1 = setInterval(flashHoldButtons, 150, 1);
+  flashHoldInterval2 = setInterval(flashHoldButtons, 150, 2);
+  flashHoldInterval3 = setInterval(flashHoldButtons, 150, 3);
   flashSpinInterval = setInterval(flashSpinButton, 150);
+  flashReelsInterval = setInterval(flashReels, 150);
   clearInterval(flashResetInterval);
 };
 
@@ -155,11 +161,14 @@ const spin = function () {
   midSpin = true;
 
   // Clear animations
-  clearInterval(flashHoldInterval);
+  clearInterval(flashHoldInterval1);
+  clearInterval(flashHoldInterval2);
+  clearInterval(flashHoldInterval3);
   clearInterval(flashSpinInterval);
+  clearInterval(flashReelsInterval);
 
   // Reset button color
-  btnSpin.style.borderColor = 'red'
+  btnSpin.style.borderColor = 'red';
 
   // play spinning audio
   audioSpin.play();
@@ -264,13 +273,15 @@ const endSpin = function () {
       if (holdNumber === 1) {
         hold = true;
         // flash buttons
-        flashHoldInterval = setInterval(flashHoldButtons, 75);
+        flashHoldInterval1 = setInterval(flashHoldButtons, 75, 1);
+        flashHoldInterval2 = setInterval(flashHoldButtons, 75, 2);
+        flashHoldInterval3 = setInterval(flashHoldButtons, 75, 3);
       }
     }
   }
 
   if (spinsRemain.textContent !== '0')
-   flashSpinInterval = setInterval(flashSpinButton, 150);
+    flashSpinInterval = setInterval(flashSpinButton, 150);
 
   // Update high score
   const curSpins = spinsRemain.textContent;
@@ -319,12 +330,19 @@ const winningBorder = function (winArr) {
   });
 };
 
-const flashHoldButtons = function () {
-  btnHoldAll.forEach(function (el) {
-    const borderColor = el.style.borderColor;
-    if (borderColor === 'blue') el.style.borderColor = 'white';
-    else el.style.borderColor = 'blue';
+const flashReels = function () {
+  reels.forEach(function (reel) {
+    const borderColor = reel.style.borderColor;
+    if (borderColor === 'goldenrod') reel.style.borderColor = 'white'
+    else reel.style.borderColor = 'goldenrod'
   });
+};
+
+const flashHoldButtons = function (reel) {
+  const el = document.getElementById(`hold--${reel}`);
+  const borderColor = el.style.borderColor;
+  if (borderColor === 'blue') el.style.borderColor = 'white';
+  else el.style.borderColor = 'blue';
 };
 
 const flashSpinButton = function () {
@@ -340,9 +358,11 @@ const flashResetButton = function () {
 
 const ResetHoldButtons = function () {
   btnHoldAll.forEach(function (el) {
-    clearInterval(flashHoldInterval);
+    clearInterval(flashHoldInterval1);
+    clearInterval(flashHoldInterval2);
+    clearInterval(flashHoldInterval3);
     el.style.borderColor = 'blue';
-    hold = false
+    hold = false;
   });
 };
 
@@ -350,6 +370,15 @@ const holdFunc = function (reelNum) {
   const reel = document.querySelector(`.reel${reelNum}`);
   reel.style.borderColor = 'blue';
   reel.classList.add('hold--reel');
+
+
+  if (reelNum === 1) clearInterval(flashHoldInterval1);
+  if (reelNum === 2) clearInterval(flashHoldInterval2);
+  if (reelNum === 3) clearInterval(flashHoldInterval3);
+
+  const holdBtn = document.getElementById(`hold--${reelNum}`);
+  holdBtn.classList.add('held');
+  holdBtn.style.borderColor = 'white';
 };
 
 init();
