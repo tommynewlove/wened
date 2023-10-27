@@ -195,37 +195,55 @@ const spin = function () {
   // Reset hold buttons
   ResetHoldButtons();
 
+  // let spinTime = 0;
+  // // Spin reels
+  // const spin = function () {
+  // Create array of reels in play
+  // let liveReels = [];
+  // reels.forEach(function (el) {
+  //   if (!el.classList.contains('hold--reel'))
+  //     liveReels.push(Number(el.dataset.reelnum));
+  // });
+  // const totalLiveReels = liveReels.length;
+  /////////////////////////////
+
+  // Spin reels
+  // Stoptimer is reduced if some reels are held
+  // liveReels.forEach(function (reel, i) {
+  //   const stopTimer = Math.trunc(Math.random() * 1000) + 1000 * (i + 1);
+  //   // if last spin, set the timer to run the endSpin function
+  //   if (i + 1 === totalLiveReels) spinTime = stopTimer;
+  //   const spinner = setInterval(reelSpin, 30, reel);
+  //   setTimeout(function () {
+  //     clearInterval(spinner);
+
+  //     const el = document.getElementById(`reel--${i+1}`);
+  //     if (!el.classList.contains('hold--reel')) {
+  //       el.style.borderColor = 'orangered';
+  //     }
+  //   }, stopTimer);
+  // });
+
   let spinTime = 0;
   // Spin reels
   const spin = function () {
-    // Create array of reels in play
-    let liveReels = [];
-    reels.forEach(function (el) {
-      if (!el.classList.contains('hold--reel'))
-        liveReels.push(Number(el.dataset.reelnum));
-    });
-    const totalLiveReels = liveReels.length;
-    /////////////////////////////
-
-    // Spin reels
-    // Stoptimer is reduced if some reels are held 
-    liveReels.forEach(function (reel, i) {
-      const stopTimer = Math.trunc(Math.random() * 1000) + 1000 * (i + 1);
+    for (let i = 1; i <= 3; i++) {
+      const stopTimer = Math.trunc(Math.random() * 1000) + 1000 * i;
       // if last spin, set the timer to run the endSpin function
-      if (i + 1 === totalLiveReels) spinTime = stopTimer;
-      const spinner = setInterval(reelSpin, 30, reel);
+      if (i === 3) spinTime = stopTimer;
+      // Spin reels
+      const spinner = setInterval(reelSpin, 30, i);
       setTimeout(function () {
         clearInterval(spinner);
 
-        const el = document.getElementById(`reel--${i+1}`);
+        const el = document.getElementById(`reel--${i}`);
         if (!el.classList.contains('hold--reel')) {
           el.style.borderColor = 'orangered';
         }
       }, stopTimer);
-    });
-
-
+    }
   };
+
   spin();
 
   // Run the endSpin function to check for any winning combinations and update score etc.
