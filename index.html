@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="wen-ed.css" />
     <link rel="shortcut icon" href="#">
     <title>Wen-Ed Bandit</title>
+    <style>
+      input[type="number"]{
+          text-align: center;
+          background-color: rgba(38, 38, 38, 0.432);
+          color: white;
+      }
+    </style>
     <h1>Wen 'ed Bandit</h1>
   </head>
   <body>
@@ -42,7 +49,7 @@
           <img src="wened1.jpg" alt="?"/>
         </div>
         <div class="scoreboard scoreboard--prizes">
-          <p>= 50</p>
+          <p>= 50x</p>
         </div>
       </div>
       <div class ="scoreboard--item">
@@ -52,7 +59,7 @@
           <img src="wened2.jpg" alt="?"/>
         </div>
         <div class="scoreboard scoreboard--prizes">
-          <p>= 40</p>
+          <p>= 25x</p>
         </div>
       </div>
       <div class ="scoreboard--item">
@@ -62,7 +69,7 @@
           <img src="wened3.jpg" alt="?"/>
         </div>
         <div class="scoreboard scoreboard--prizes">
-          <p>= 30</p>
+          <p>= 10x</p>
         </div>
       </div>
         <div class ="scoreboard--item">
@@ -72,26 +79,35 @@
           <img src="wened4.jpg" alt="?"/>
         </div>
         <div class="scoreboard scoreboard--prizes">
-          <p>= 20</p>
+          <p>= 5x</p>
         </div>
       </div>
     </div>
     <div class ="scoreboard--item">
     <div class="scoreboard scoreboard--images">
-      2 'eds
+      👤 👤 ❌ 
     </div>
     <div class="scoreboard scoreboard--prizes">
-      <p>= 10</p>
+      <p>= 20%</p>
     </div>
   </div>
         <!-- <p>👤 👤 👤 = 10<br />👤 👤 ❌ = 3</p> -->
       </section>
 
       <section class="game--stats--container">
-        <div class="stats spins--remaining--container">
-          <p>Credits</p>
-          <p class="stat--num spins--remaining">10</p>
+        <div class ="stats--top">
+          <div class="stats credits--container">
+            <p>Credits</p>
+            <p class="stat--num spins--remaining">100</p>
+          </div>
+          <div class="stats bet--container">
+            <p>Bet</p>
+            <input type="number" class="stat--num input--bet" min="1" max="100"></input>
+            <!-- <p class="stat--num spins--remaining">10</p> -->
+          </div>
         </div>
+
+      <div class="stats--bottom">
         <div class="stats player--score--container">
           <p>Score</p>
           <p class="stat--num player--score">0</p>
@@ -100,7 +116,9 @@
           <p>Hi-Score</p>
           <p class="stat--num high--score">0</p>
         </div>
+      </div>
       </section>
+
     </section>
 
       <section class="spin--container">

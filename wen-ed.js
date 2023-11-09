@@ -5,11 +5,13 @@ let midSpin = false;
 const images = 4;
 // image code, prize, odds
 const prizes = [
-  [1, 50, 0.1],
-  [2, 40, 0.2],
-  [3, 30, 0.3],
-  [4, 20, 0.4],
+  [1, 50],
+  [2, 25],
+  [3, 10],
+  [4, 5],
 ];
+
+const weights = [1, 2, 3, 4];
 
 const randomNumber = function (number) {
   return Math.trunc(Math.random() * number + 1);
@@ -42,8 +44,9 @@ const btnHoldAll = document.querySelectorAll('.hold');
 const reels = document.querySelectorAll('.reel');
 const box = document.querySelectorAll('.box');
 
+const bet = document.querySelector('.input--bet');
 const playerScore = document.querySelector('.player--score');
-const spinsRemain = document.querySelector('.spins--remaining');
+const credits = document.querySelector('.spins--remaining');
 const highScore = document.querySelector('.high--score');
 
 const audioReset = new Audio('enjoy_yourselves.wav');
@@ -76,10 +79,24 @@ btnHold3.addEventListener('click', function () {
 ///////////////////////////////////////////////////
 // Functions
 
+// Image Generator
+let distribution = [];
+const createDistribution = (prizes, weights) => {
+  // Create an array to which to choose a random element from
+  // The array will contain duplicate entires of the prizes with the most likely having more entries in the array
+  weights.forEach(function (el, index) {
+    for (let i = 1; i <= el; i++) distribution.push(prizes[index]);
+  });
+
+  return distribution;
+};
+createDistribution(prizes, weights);
+
 // Init
 const init = function () {
   // Reset player score and spins remaining
-  spinsRemain.textContent = 10;
+  bet.value = 0;
+  credits.textContent = 100;
   playerScore.textContent = 0;
   midSpin = false;
 
@@ -130,19 +147,48 @@ const generateImgHTML = function (reel, imgNum) {
   return imgHTML;
 };
 
-// Swap the image in each reel
-const reelSpin = function (reelNum) {
-  // Select random image
-  const randomImage = Math.trunc(Math.random() * images) + 1;
-  imgHTML = generateImgHTML(reelNum, randomImage);
-
-  // if reel not on hold swap images
+// Set first image in the reel
+const initReel = function (reelNum) {
   const reel = document.querySelector(`.reel${reelNum}`);
   if (!reel.classList.contains('hold--reel')) {
     // remove current image
     const curImg = document.querySelector(`.image${reelNum}`);
     if (curImg) curImg.remove();
-    // insert new Image
+
+    const imgHTML = generateImgHTML(reelNum, reelNum);
+    reel.insertAdjacentHTML('beforeend', imgHTML);
+  }
+  //
+};
+
+// Swap the image in each reel
+const reelSpin = function (reelNum) {
+  // if reel not on hold swap images
+  const reel = document.querySelector(`.reel${reelNum}`);
+  // console.log(reel);
+  if (!reel.classList.contains('hold--reel')) {
+    // remove current image
+    const curImg = document.querySelector(`.image${reelNum}`);
+    // console.log(curImg);
+    const imgNum = Number(curImg.dataset.number);
+    //
+    if (curImg) curImg.remove();
+    // insert next Image
+    let nextImg;
+    if (imgNum < images) nextImg = imgNum + 1;
+    else nextImg = 1;
+    const imgHTML = generateImgHTML(reelNum, nextImg);
+    reel.insertAdjacentHTML('beforeend', imgHTML);
+  }
+};
+
+const winningImage = function (reelNum) {
+  const reel = document.querySelector(`.reel${reelNum}`);
+  if (!reel.classList.contains('hold--reel')) {
+    const winnerIndex = Math.trunc(Math.random() * distribution.length);
+    const curImg = document.querySelector(`.image${reelNum}`);
+    if (curImg) curImg.remove();
+    imgHTML = generateImgHTML(reelNum, distribution[winnerIndex][0]);
     reel.insertAdjacentHTML('beforeend', imgHTML);
   }
 };
@@ -153,8 +199,18 @@ const spin = function () {
   if (midSpin) return;
 
   // do not continue if no spins are remaining
-  const curSpins = spinsRemain.textContent;
+  const curSpins = credits.textContent;
   if (curSpins === '0') {
+    return;
+  }
+
+  if (bet.value > Number(credits.textContent)) {
+    alert('not enuf credits bozo');
+    return;
+  }
+
+  if (bet.value == 0) {
+    alert('enter bet amount doofus');
     return;
   }
 
@@ -173,8 +229,8 @@ const spin = function () {
   // play spinning audio
   audioSpin.play();
 
-  // Reduce number of spins remaining by 1
-  spinsRemain.textContent = Number(curSpins) - 1;
+  // Reduce number of spins remaining by bet amt
+  credits.textContent = Number(curSpins) - bet.value;
 
   // Hide the '?' box and swap class to image container for each reel
   reels.forEach(function (reel) {
@@ -230,6 +286,8 @@ const spin = function () {
     // Spin reels
     // Stoptimer is reduced if some reels are held
     liveReels.forEach(function (reel, i) {
+      // set the first images
+      initReel(i + 1);
       const stopTimer = Math.trunc(Math.random() * 1000) + 1000 * (i + 1);
       // if last spin, set the timer to run the endSpin function
       if (i + 1 === totalLiveReels) spinTime = stopTimer;
@@ -237,8 +295,10 @@ const spin = function () {
       setTimeout(function () {
         clearInterval(spinner);
 
-        const el = document.getElementById(`reel--${i + 1}`);
+        const reelNum = i + 1;
+        const el = document.getElementById(`reel--${reelNum}`);
         if (!el.classList.contains('hold--reel')) {
+          winningImage(reelNum);
           el.style.borderColor = 'orangered';
         }
       }, stopTimer);
@@ -269,14 +329,17 @@ const spin = function () {
 
 // Endspin
 const endSpin = function () {
+  let win = false;
   const win1 = document.querySelector('.image1').dataset.number;
   const win2 = document.querySelector('.image2').dataset.number;
   const win3 = document.querySelector('.image3').dataset.number;
-  const curScore = playerScore.textContent;
-  const points = prizes
-    .filter(arr => arr[0] === Number(win1))
-    .map(arr => arr[1])
-    .reduce((acc, points) => points, 0);
+  const curScore = Number(playerScore.textContent);
+  let points =
+    prizes
+      .filter(arr => arr[0] === Number(win1))
+      .map(arr => arr[1])
+      .reduce((acc, points) => points, 0) * bet.value;
+  let newScore = 0;
   // console.log(points);
   let winArr = [];
 
@@ -287,12 +350,15 @@ const endSpin = function () {
 
   // All 3 images match
   if (win1 === win2 && win1 === win3) {
+    win = true;
     // set winning reel array
     winArr = [1, 2, 3];
     // play audio
     audioJuicy.play();
     // increase score
-    playerScore.textContent = Number(curScore) + points;
+    newScore = curScore + points;
+    // playerScore.textContent = Number(curScore) + points;
+    scoreIncrease(points, newScore);
     // Set css border color
     winningBorder(winArr);
     // Flash winning images
@@ -300,9 +366,13 @@ const endSpin = function () {
 
     // First 2 images match
   } else if (win1 === win2) {
+    win = true;
     winArr = [1, 2];
     audioBiscuit.play();
-    playerScore.textContent = Number(curScore) + 10;
+    points = points / 5;
+    newScore = curScore + points;
+    // playerScore.textContent = Number(curScore) + 1 * bet;
+    scoreIncrease(points, newScore);
     winningBorder(winArr);
     winFlash(1350, winArr);
 
@@ -316,7 +386,7 @@ const endSpin = function () {
     // Hold function
     const holdNumber = randomNumber(3);
 
-    if (spinsRemain.textContent !== '0') {
+    if (credits.textContent !== '0') {
       if (holdNumber === 1) {
         hold = true;
         // flash buttons
@@ -327,13 +397,16 @@ const endSpin = function () {
     }
   }
 
-  if (spinsRemain.textContent !== '0')
+  if (credits.textContent !== '0')
     flashSpinInterval = setInterval(flashSpinButton, 150);
 
   // Update high score
-  const curSpins = spinsRemain.textContent;
+  const curSpins = credits.textContent;
   if (curSpins === '0') {
-    const finalScore = Number(playerScore.textContent);
+    // update final score
+    let finalScore = curScore;
+    if (win) finalScore = Number(playerScore.textContent) + points;
+    //
     const curHighScore = Number(highScore.textContent);
     if (curHighScore < finalScore) {
       highScore.textContent = finalScore;
@@ -425,6 +498,24 @@ const holdFunc = function (reelNum) {
   const holdBtn = document.getElementById(`hold--${reelNum}`);
   holdBtn.classList.add('held');
   holdBtn.style.borderColor = 'white';
+};
+
+const scoreIncrease = function (points, max) {
+  const timeInterval = 2000 / points;
+  const increaseScore = setInterval(
+    function () {
+      const curScore = Number(playerScore.textContent);
+      const score = curScore + 1;
+      if (curScore < max) {
+        playerScore.textContent = `${score}`;
+      }
+    },
+    timeInterval,
+    points
+  );
+  setTimeout(function () {
+    clearInterval(increaseScore);
+  }, 2050);
 };
 
 init();
