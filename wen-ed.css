@@ -230,7 +230,7 @@ p {
 
 .scoreboard--images {
   display: flex;
-  width: 60%;
+  width: 65%;
   /* height: 2.5rem; */
   font-size: 2rem;
   /* margin-top: 1rem;
@@ -245,7 +245,7 @@ p {
 
 .scoreboard--prizes {
   font-size: 2rem;
-  width: 40%;
+  width: 35%;
   margin-right: 0.5rem;
 }
 
