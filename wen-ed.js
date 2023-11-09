@@ -2,6 +2,8 @@
 
 // variables
 let midSpin = false;
+let mini1Ready = true;
+let mini1Speed;
 const images = 4;
 // image code, prize, odds
 const prizes = [
@@ -33,6 +35,7 @@ let reelClass = `reel${reelNum}`;
 let imgHTML = `<img src="wened${img}.jpg" alt="?" class="image image${imgClass}" data-number="${img}" id="reel--${reelNum}--img--${img}"/>`;
 
 // elements
+const spinContainer = document.querySelector('.spin--container');
 const btnSpin = document.querySelector('.spin');
 const resetContainer = document.querySelector('.reset--container');
 const resetBtn = document.querySelector('.reset--btn');
@@ -54,6 +57,15 @@ const audioSpin = new Audio('spin.wav');
 const audioJuicy = new Audio('juicyspud.wav');
 const audioBiscuit = new Audio('biscuit.wav');
 
+//  minigame1 elements
+const mini1Container = document.querySelector('.minigame1--container');
+const double = document.querySelector('.double');
+const nothing = document.querySelector('.nothing');
+const btnMini1Bank = document.querySelector('.bank--btn');
+const btnMini1Stop = document.querySelector('.stop--btn');
+const scoreMini1 = document.querySelector('.minigame1--score');
+const mini1Flash = document.querySelectorAll('.mini1--flash');
+
 //////////////////////////////////////////////////////
 // Event Listeners
 btnSpin.addEventListener('click', function () {
@@ -74,6 +86,20 @@ btnHold2.addEventListener('click', function () {
 
 btnHold3.addEventListener('click', function () {
   if (hold) holdFunc(3);
+});
+
+btnMini1Bank.addEventListener('click', function (e) {
+  if (mini1Ready) {
+    mini1Bank();
+    mini1Ready = false;
+  }
+});
+
+btnMini1Stop.addEventListener('click', function (e) {
+  if (mini1Ready) {
+    mini1Stop(mini1Speed, scoreMini1.textContent);
+    mini1Ready = false;
+  }
 });
 
 ///////////////////////////////////////////////////
@@ -128,6 +154,7 @@ const init = function () {
   highScore.style.color = 'white';
   playerScore.style.color = 'white';
   resetContainer.classList.add('hidden');
+  spinContainer.classList.remove('hidden');
 
   // Play reset sound
   // audioReset.play();
@@ -372,9 +399,13 @@ const endSpin = function () {
     points = points / 5;
     newScore = curScore + points;
     // playerScore.textContent = Number(curScore) + 1 * bet;
-    scoreIncrease(points, newScore);
+    // scoreIncrease(points, newScore);
     winningBorder(winArr);
-    winFlash(1350, winArr);
+    // winFlash(1350, winArr);
+    spinContainer.classList.add('hidden');
+    mini1Container.classList.remove('hidden');
+    mini1Speed = 800;
+    minigame1Speed(mini1Speed, points);
 
     // No images match
   } else {
@@ -414,6 +445,7 @@ const endSpin = function () {
     }
 
     playerScore.style.color = 'greenyellow';
+    spinContainer.classList.add('hidden');
     resetContainer.classList.remove('hidden');
     flashResetInterval = setInterval(flashResetButton, 150);
   }
@@ -501,21 +533,107 @@ const holdFunc = function (reelNum) {
 };
 
 const scoreIncrease = function (points, max) {
-  const timeInterval = 2000 / points;
+  const timeInterval = 1000 / points;
   const increaseScore = setInterval(
     function () {
       const curScore = Number(playerScore.textContent);
       const score = curScore + 1;
       if (curScore < max) {
         playerScore.textContent = `${score}`;
-      }
+      } else clearInterval(increaseScore);
     },
     timeInterval,
     points
   );
+};
+
+let flashOptionMini1;
+let flashMini1Score;
+const minigame1Speed = function (speed, points) {
+  mini1Ready = true;
+  scoreMini1.textContent = points;
+  scoreMini1.style.color = 'white';
+
+  nothing.classList.remove('opacity');
+  double.classList.add('opacity');
+
+  const toggleWin = function () {
+    mini1Flash.forEach(function (el) {
+      el.classList.toggle('opacity');
+    });
+  };
+
+  flashMini1Score = setInterval(opacity, 50, scoreMini1);
+  flashOptionMini1 = setInterval(toggleWin, speed);
+};
+
+const mini1Stop = function (speed, score) {
+  let endMini1 = false;
+  let lose = false;
+  clearInterval(flashOptionMini1);
+
+  // if win
+  if (!double.classList.contains('opacity')) {
+    scoreMini1.style.color = 'greenyellow';
+    scoreMini1.textContent = `${Number(score) * 2}`;
+  } else {
+    endMini1 = true;
+    lose = true;
+    scoreMini1.textContent = 0;
+    scoreMini1.style.color = 'red';
+    mini1Bank();
+  }
+
+  // flash seletion
+  mini1Flash.forEach(function (el) {
+    if (!el.classList.contains('opacity')) {
+      flashOptionMini1 = setInterval(opacity, 50, el);
+    }
+  });
+
+  if (!lose) {
+    setTimeout(function () {
+      clearInterval(flashMini1Score);
+      clearInterval(flashOptionMini1);
+      scoreMini1.classList.remove('opacity');
+      mini1Flash.forEach(el => el.classList.remove('opacity'));
+      //
+      const speedReduction = speed / 2;
+      if (speed == 50) {
+        endMini1 = true;
+      }
+      mini1Speed -= speedReduction;
+      //
+      if (!endMini1) {
+        console.log(speedReduction);
+        console.log(mini1Speed);
+        minigame1Speed(mini1Speed, Number(score) * 2);
+      } else {
+        mini1Bank();
+      }
+    }, 1000);
+  }
+};
+
+const mini1Bank = function () {
+  clearInterval(flashOptionMini1);
+  mini1Flash.forEach(el => el.classList.add('opacity'));
+  //
   setTimeout(function () {
-    clearInterval(increaseScore);
-  }, 2050);
+    clearInterval(flashMini1Score);
+    const points = Number(scoreMini1.textContent);
+    const max =
+      Number(playerScore.textContent) + Number(scoreMini1.textContent);
+    scoreIncrease(points, max);
+    //
+    mini1Container.classList.add('hidden');
+    spinContainer.classList.remove('hidden');
+    midSpin = false;
+  }, 1000);
+};
+
+const opacity = function (el) {
+  el.classList.toggle('opacity');
 };
 
 init();

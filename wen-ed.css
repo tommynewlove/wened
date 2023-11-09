@@ -151,7 +151,7 @@ p {
   font-family: inherit;
   padding: 1rem 2rem;
   cursor: pointer;
-  margin: 3rem;
+  margin: 2rem;
 }
 
 .middle--body {
@@ -273,7 +273,70 @@ p {
   font-family: inherit;
   padding: 1rem 2rem;
   cursor: pointer;
-  margin: 1rem;
+  margin: 2rem;
+}
+
+.minigame1--container {
+  width: 100%;
+  margin-top: 1rem;
+  font-family: 'Bungee Inline', sans-serif;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.minigame1--top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 3rem;
+}
+
+.double {
+  width: 50%;
+  color: grey;
+  color: greenyellow;
+}
+
+.nothing {
+  width: 50%;
+  color: red;
+}
+
+.opacity {
+  opacity: 20%;
+}
+
+.minigame1--bottom {
+  /* display: flex;
+  justify-content: space-between;
+  margin-left: 9%;
+  margin-right: 9%; */
+  margin-top: 1rem;
+}
+
+.bank--btn {
+  width: 40%;
+  border-style: inset;
+  border-width: 3px;
+  border-color: red;
+  background-color: #eee;
+  color: #222;
+  font-size: 2rem;
+  font-family: inherit;
+  padding: 1rem 2rem;
+  cursor: pointer;
+}
+
+.stop--btn {
+  width: 40%;
+  border-style: inset;
+  border-width: 3px;
+  border-color: red;
+  background-color: #eee;
+  color: #222;
+  font-size: 2rem;
+  font-family: inherit;
+  padding: 1rem 2rem;
+  cursor: pointer;
 }
 
 .hidden {
