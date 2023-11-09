@@ -230,7 +230,7 @@ p {
 
 .scoreboard--images {
   display: flex;
-  width: 50%;
+  width: 60%;
   /* height: 2.5rem; */
   font-size: 2rem;
   /* margin-top: 1rem;
@@ -244,10 +244,13 @@ p {
 }
 
 .scoreboard--prizes {
-  width: 50%;
   font-size: 2rem;
-  /* margin-top: 1rem;
-  margin-left: 1rem; */
+  width: 40%;
+  margin-right: 0.5rem;
+}
+
+.prize {
+  text-align: right;
 }
 
 /* .scoreboard--prizes img {
